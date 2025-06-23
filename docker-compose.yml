@@ -1,0 +1,63 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: device-manager-db
+    environment:
+      POSTGRES_DB: device_manager
+      POSTGRES_USER: device_user
+      POSTGRES_PASSWORD: device_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+    networks:
+      - device-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U device_user -d device_manager"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # Device Manager Application
+  device-manager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: device-manager-app
+    ports:
+      - "8080:8080"
+    environment:
+      # Database configuration
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/device_manager
+      SPRING_DATASOURCE_USERNAME: device_user
+      SPRING_DATASOURCE_PASSWORD: device_password
+      SPRING_R2DBC_URL: r2dbc:postgresql://postgres:5432/device_manager
+      SPRING_R2DBC_USERNAME: device_user
+      SPRING_R2DBC_PASSWORD: device_password
+      
+      # Flyway configuration
+      SPRING_FLYWAY_URL: jdbc:postgresql://postgres:5432/device_manager
+      SPRING_FLYWAY_USER: device_user
+      SPRING_FLYWAY_PASSWORD: device_password
+      SPRING_FLYWAY_ENABLED: true
+      
+      # Application configuration
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: 8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - device-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  device-network:
+    driver: bridge
