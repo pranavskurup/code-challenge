@@ -12,3 +12,26 @@ management:
     health:
       show-details: always
       show-components: always
+
+# Logging configuration
+logging:
+  level:
+    root: INFO
+    com.device.manager: INFO
+    com.device.manager.infrastructure.inbound.web.handler: INFO
+    com.device.manager.application.service: INFO
+    com.device.manager.infrastructure.outbound.persistence: INFO
+    com.device.manager.infrastructure.inbound.web.exception: WARN
+    # Database related logging
+    org.springframework.r2dbc: DEBUG
+    io.r2dbc.postgresql: DEBUG
+    # Transaction logging
+    org.springframework.transaction: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{36}] - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{36}] - %msg%n"
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 30
+      total-size-cap: 100MB
