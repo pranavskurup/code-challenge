@@ -2,6 +2,26 @@ spring:
   application:
     name: device-manager
 
+# OpenAPI configuration
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    url: /v3/api-docs
+    disable-swagger-default-url: true
+    doc-expansion: none
+    operations-sorter: alpha
+    tags-sorter: alpha
+    show-extensions: true
+    show-common-extensions: true
+  show-actuator: false
+  webjars:
+    prefix: /webjars
+
 # Actuator configuration
 management:
   endpoints:
