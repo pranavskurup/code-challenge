@@ -52,4 +52,13 @@ class OpenApiConfig {
             .pathsToMatch("/api/v1/devices/**")
             .build()
     }
+
+    @Bean
+    fun healthApiGroup(): GroupedOpenApi {
+        return GroupedOpenApi.builder()
+            .group("health-api")
+            .displayName("Health & Information API")
+            .pathsToMatch("/api/v1/health", "/api/v1/info")
+            .build()
+    }
 }
