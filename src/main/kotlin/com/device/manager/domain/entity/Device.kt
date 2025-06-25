@@ -30,27 +30,6 @@ data class Device(
         return state == DeviceState.INACTIVE
     }
 
-    suspend fun toAvailable(): Either<DeviceStateChangeError,Device> {
-        if (state != DeviceState.INACTIVE) {
-            return DeviceStateChangeError(id.toString(), state).left()
-        }
-        return this.copy(state = DeviceState.AVAILABLE, updatedTime = ZonedDateTime.now()).right()
-    }
-
-    fun toInUse(): Either<DeviceStateChangeError,Device> {
-        if (state != DeviceState.AVAILABLE) {
-            return DeviceStateChangeError(id.toString(), state).left()
-        }
-        return this.copy(state = DeviceState.IN_USE, updatedTime = ZonedDateTime.now()).right()
-    }
-
-    fun toInactive(): Either<DeviceStateChangeError,Device> {
-        if (state == DeviceState.INACTIVE) {
-            return DeviceStateChangeError(id.toString(), state).left()
-        }
-        return this.copy(state = DeviceState.INACTIVE, updatedTime = ZonedDateTime.now()).right()
-    }
-
     override fun toString(): String {
         return "Device(id=$id, name='$name', type='$type', brand='$brand', status='$state')"
     }
