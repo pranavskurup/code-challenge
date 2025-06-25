@@ -1,0 +1,57 @@
+spring:
+  application:
+    name: device-manager
+
+# OpenAPI configuration
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    url: /v3/api-docs
+    disable-swagger-default-url: true
+    doc-expansion: none
+    operations-sorter: alpha
+    tags-sorter: alpha
+    show-extensions: true
+    show-common-extensions: true
+  show-actuator: false
+  webjars:
+    prefix: /webjars
+
+# Actuator configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+
+# Logging configuration
+logging:
+  level:
+    root: INFO
+    com.device.manager: INFO
+    com.device.manager.infrastructure.inbound.web.handler: INFO
+    com.device.manager.application.service: INFO
+    com.device.manager.infrastructure.outbound.persistence: INFO
+    com.device.manager.infrastructure.inbound.web.exception: WARN
+    # Database related logging
+    org.springframework.r2dbc: DEBUG
+    io.r2dbc.postgresql: DEBUG
+    # Transaction logging
+    org.springframework.transaction: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{36}] - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{36}] - %msg%n"
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 30
+      total-size-cap: 100MB

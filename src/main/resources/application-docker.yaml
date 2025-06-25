@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: device-manager
+
+  # Database configuration for Docker environment
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/device_manager}
+    username: ${SPRING_DATASOURCE_USERNAME:device_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:device_password}
+
+  # R2DBC configuration
+  r2dbc:
+    url: ${SPRING_R2DBC_URL:r2dbc:postgresql://localhost:5432/device_manager}
+    username: ${SPRING_R2DBC_USERNAME:device_user}
+    password: ${SPRING_R2DBC_PASSWORD:device_password}
+
+  # Flyway configuration
+  flyway:
+    url: ${SPRING_FLYWAY_URL:jdbc:postgresql://localhost:5432/device_manager}
+    user: ${SPRING_FLYWAY_USER:device_user}
+    password: ${SPRING_FLYWAY_PASSWORD:device_password}
+    enabled: ${SPRING_FLYWAY_ENABLED:true}
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+# Server configuration
+server:
+  port: ${SERVER_PORT:8080}
+
+# Actuator for health checks
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+
+# Logging configuration
+logging:
+  level:
+    com.device.manager: INFO
+    org.springframework.r2dbc: DEBUG
+    org.flywaydb: INFO
